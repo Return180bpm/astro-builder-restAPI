@@ -12,3 +12,4 @@
 ---
 
 A demo for using Astro with builder.io's REST API. 
+Based on the official [Astro blog tutorial](https://docs.astro.build/en/tutorial/0-introduction/).
