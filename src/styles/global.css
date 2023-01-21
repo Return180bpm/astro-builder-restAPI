@@ -53,6 +53,8 @@ h1 {
     text-transform: uppercase;
 }
 
+
+
 .nav-links a:hover,
 a:focus {
     background-color: #ff9776;
@@ -68,10 +70,9 @@ a:focus {
     }
 
     .nav-links {
-        margin-left: 5em;
-        display: block;
+        display: flex;
         position: static;
-        width: auto;
+        width: 100%;
         background: none;
     }
 
@@ -80,4 +81,8 @@ a:focus {
         padding: 15px 20px;
     }
 
+    .nav-links a.rss {
+        order: 99;
+        margin-left: auto;
+    }
 }
