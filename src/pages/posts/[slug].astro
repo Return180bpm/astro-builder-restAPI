@@ -1,0 +1,39 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogPost from "../../components/BlogPost.astro";
+
+export async function getStaticPaths() {
+    const builderAPIpublicKey = "add3bfefbde24699aeb53c5a1ad64377";
+
+    const baseURL = "https://astro-builder-restapi.netlify.app/";
+    const handleError = (err) => {
+        // The requested Builder content could not be found.
+        if (err.response.status === 404) {
+            return { data: null };
+        }
+        throw err;
+    };
+
+    const encodedUrl = encodeURIComponent(baseURL + "/posts");
+
+    const { data: posts } = await fetch(
+        `https://cdn.builder.io/api/v1/html/blogpost?apiKey=${builderAPIpublicKey}&url=${encodedUrl}&query.slug=${slug}`
+    )
+        .then((res) => res.json())
+        .catch(handleError);
+
+    console.log(posts);
+    console.log(encodedUrl);
+    return posts.map(({ slug, title }) => ({
+        params: { slug },
+        props: { title },
+    }));
+}
+
+const { title } = Astro.props;
+console.log(title);
+---
+
+<BaseLayout pageTitle={tag}>
+    <h1>{title}</h1>
+</BaseLayout>
