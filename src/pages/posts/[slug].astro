@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import BlogPost from "../../components/BlogPost.astro";
 
 export async function getStaticPaths() {
     const builderAPIpublicKey = "add3bfefbde24699aeb53c5a1ad64377";
@@ -14,26 +13,29 @@ export async function getStaticPaths() {
         throw err;
     };
 
-    const encodedUrl = encodeURIComponent(baseURL + "/posts");
-
-    const { data: posts } = await fetch(
-        `https://cdn.builder.io/api/v1/html/blogpost?apiKey=${builderAPIpublicKey}&url=${encodedUrl}&query.slug=${slug}`
+    const { results: posts } = await fetch(
+        `https://cdn.builder.io/api/v2/content/blogpost?apiKey=${builderAPIpublicKey}&fields=id,name,data.slug,data.title`
     )
         .then((res) => res.json())
         .catch(handleError);
 
-    console.log(posts);
-    console.log(encodedUrl);
-    return posts.map(({ slug, title }) => ({
+    // const encodedUrl = encodeURIComponent(baseURL + "/posts");
+
+    // const { data: posts } = await fetch(
+    //     `https://cdn.builder.io/api/v1/html/blogpost?apiKey=${builderAPIpublicKey}&url=${encodedUrl}&query.slug=${slug}`
+    // )
+    //     .then((res) => res.json())
+    //     .catch(handleError);
+
+    return posts.map(({ data: { slug, title } }) => ({
         params: { slug },
         props: { title },
     }));
 }
 
 const { title } = Astro.props;
-console.log(title);
 ---
 
-<BaseLayout pageTitle={tag}>
+<BaseLayout pageTitle={title}>
     <h1>{title}</h1>
 </BaseLayout>
