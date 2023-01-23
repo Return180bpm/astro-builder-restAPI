@@ -2,16 +2,31 @@
 import BlogPost from "../components/BlogPost.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const allPosts = await Astro.glob("../pages/posts/*.md");
+// const allPosts = await Astro.glob("../pages/posts/*.md");
 const pageTitle = "My Astro Learning Blog";
+
+const builderAPIpublicKey = "add3bfefbde24699aeb53c5a1ad64377";
+
+const handleError = (err) => {
+    // The requested Builder content could not be found.
+    if (err.response.status === 404) {
+        return { data: null };
+    }
+    throw err;
+};
+
+const { results: posts } = await fetch(
+    `https://cdn.builder.io/api/v2/content/blogpost?apiKey=${builderAPIpublicKey}&fields=id,name,data.slug,data.title`
+)
+    .then((res) => res.json())
+    .catch(handleError);
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-    <p>yes, it's a bloggo</p>
     <ul>
         {
-            allPosts.map((post) => (
-                <BlogPost url={post.url} title={post.frontmatter.title} />
+            posts.map(({ data: { slug, title } }) => (
+                <BlogPost url={`/${slug}`} title={title} />
             ))
         }
     </ul>
