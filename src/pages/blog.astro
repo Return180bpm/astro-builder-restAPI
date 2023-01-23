@@ -27,7 +27,7 @@ const { results: posts } = await fetch(
     <ul>
         {
             posts.map(({ data: { slug, title } }) => (
-                <BlogPost url={`/${slug}`} title={title} />
+                <BlogPost url={`/posts/${slug}`} title={title} />
             ))
         }
     </ul>
