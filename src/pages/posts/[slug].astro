@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
+const builderAPIpublicKey = "add3bfefbde24699aeb53c5a1ad64377";
+
 export async function getStaticPaths() {
     const builderAPIpublicKey = "add3bfefbde24699aeb53c5a1ad64377";
 
@@ -37,5 +39,8 @@ const { title } = Astro.props;
 ---
 
 <BaseLayout pageTitle={title}>
+    <builder-component model="blogpost" api-key={builderAPIpublicKey}
+    ></builder-component>
+    <script async src="https://cdn.builder.io/js/webcomponents"></script>
     <h1>{title}</h1>
 </BaseLayout>
