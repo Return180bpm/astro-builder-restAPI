@@ -29,13 +29,19 @@ export async function getStaticPaths() {
         .then((res) => res.json())
         .catch(handleError);
 
-    return posts.map(({ data: { slug, title } }) => ({
-        params: { slug },
-        props: { title },
-    }));
+    return posts.map(({ data: { slug, title } }) => [
+        {
+            params: { slug },
+            props: { title },
+        },
+        {
+            params: { slug: `${slug}/builder-preview` },
+            props: { isPreview: true },
+        },
+    ]);
 }
 const { slug } = Astro.params;
-const { title } = Astro.props;
+const { title, isPreview } = Astro.props;
 
 const encodedUrl = encodeURIComponent(Astro.request.url);
 
@@ -47,8 +53,17 @@ const { html: postHTML } = await fetch(
 ---
 
 <BaseLayout pageTitle={title}>
-    <!-- <builder-component model="blogpost" api-key={builderAPIpublicKey}
-    ></builder-component>
-    <script async src="https://cdn.builder.io/js/webcomponents"></script> -->
-    <Fragment set:html={postHTML} />
+    {
+        isPreview ? (
+            <>
+                <builder-component
+                    model="blogpost"
+                    api-key={builderAPIpublicKey}
+                />
+                <script async src="https://cdn.builder.io/js/webcomponents" />
+            </>
+        ) : (
+            <Fragment set:html={postHTML} />
+        )
+    }
 </BaseLayout>
