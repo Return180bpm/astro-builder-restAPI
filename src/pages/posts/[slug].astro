@@ -2,6 +2,14 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const builderAPIpublicKey = "add3bfefbde24699aeb53c5a1ad64377";
+// const builderModelName = "blogpost"
+const handleError = (err) => {
+    // The requested Builder content could not be found.
+    if (err.response.status === 404) {
+        return { data: null };
+    }
+    throw err;
+};
 
 export async function getStaticPaths() {
     const builderAPIpublicKey = "add3bfefbde24699aeb53c5a1ad64377";
@@ -21,26 +29,26 @@ export async function getStaticPaths() {
         .then((res) => res.json())
         .catch(handleError);
 
-    // const encodedUrl = encodeURIComponent(baseURL + "/posts");
-
-    // const { data: posts } = await fetch(
-    //     `https://cdn.builder.io/api/v1/html/blogpost?apiKey=${builderAPIpublicKey}&url=${encodedUrl}&query.slug=${slug}`
-    // )
-    //     .then((res) => res.json())
-    //     .catch(handleError);
-
     return posts.map(({ data: { slug, title } }) => ({
         params: { slug },
         props: { title },
     }));
 }
-
+const { slug } = Astro.params;
 const { title } = Astro.props;
+
+const encodedUrl = encodeURIComponent(Astro.request.url);
+
+const { html: postHTML } = await fetch(
+    `https://cdn.builder.io/api/v1/qwik/blogpost?apiKey=${builderAPIpublicKey}&url=${encodedUrl}&limit=1`
+)
+    .then((res) => res.json())
+    .catch(handleError);
 ---
 
 <BaseLayout pageTitle={title}>
-    <builder-component model="blogpost" api-key={builderAPIpublicKey}
+    <!-- <builder-component model="blogpost" api-key={builderAPIpublicKey}
     ></builder-component>
-    <script async src="https://cdn.builder.io/js/webcomponents"></script>
-    <h1>{title}</h1>
+    <script async src="https://cdn.builder.io/js/webcomponents"></script> -->
+    <Fragment set:html={postHTML} />
 </BaseLayout>
