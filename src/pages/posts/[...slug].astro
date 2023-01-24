@@ -32,11 +32,11 @@ export async function getStaticPaths() {
     return posts.map(({ data: { slug, title } }) => [
         {
             params: { slug },
-            props: { title },
+            props: { title, isPreview: false },
         },
         {
             params: { slug: `${slug}/builder-preview` },
-            props: { isPreview: true },
+            props: { title, isPreview: true },
         },
     ]);
 }
@@ -46,13 +46,14 @@ const { title, isPreview } = Astro.props;
 const encodedUrl = encodeURIComponent(Astro.request.url);
 
 const { html: postHTML } = await fetch(
-    `https://cdn.builder.io/api/v1/qwik/blogpost?apiKey=${builderAPIpublicKey}&url=${encodedUrl}&limit=1`
+    `https://cdn.builder.io/api/v1/qwik/blogpost?apiKey=${builderAPIpublicKey}&url=${encodedUrl}&query.data.slug=${slug}&limit=1`
 )
     .then((res) => res.json())
     .catch(handleError);
 ---
 
 <BaseLayout pageTitle={title}>
+    {console.log("hey" + isPreview && 18)}
     {
         isPreview ? (
             <>
@@ -66,4 +67,5 @@ const { html: postHTML } = await fetch(
             <Fragment set:html={postHTML} />
         )
     }
+    <!-- <Fragment set:html={postHTML} /> -->
 </BaseLayout>
