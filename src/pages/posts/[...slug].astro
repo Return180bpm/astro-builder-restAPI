@@ -29,16 +29,22 @@ export async function getStaticPaths() {
         .then((res) => res.json())
         .catch(handleError);
 
-    return posts.map(({ data: { slug, title } }) => [
+    return [
+        ...posts.map(({ data: { slug, title } }) => [
+            {
+                params: { slug },
+                props: { title, isPreview: false },
+            },
+            {
+                params: { slug: `${slug}/builder-preview` },
+                props: { title, isPreview: true },
+            },
+        ]),
         {
-            params: { slug },
-            props: { title, isPreview: false },
+            params: { slug: `_builder-preview` },
+            props: { isPreview: true },
         },
-        {
-            params: { slug: `${slug}/builder-preview` },
-            props: { title, isPreview: true },
-        },
-    ]);
+    ];
 }
 const { slug } = Astro.params;
 const { title, isPreview } = Astro.props;
