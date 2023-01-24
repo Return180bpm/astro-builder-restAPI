@@ -29,6 +29,8 @@ export async function getStaticPaths() {
         .then((res) => res.json())
         .catch(handleError);
 
+    console.log(posts);
+
     return [
         ...posts.map(({ data: { slug, title } }) => [
             {

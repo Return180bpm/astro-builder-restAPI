@@ -1,26 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 const pageTitle = "Home Page";
-const builderAPIpublicKey = "add3bfefbde24699aeb53c5a1ad64377";
-
-const handleError = (err) => {
-	// The requested Builder content could not be found.
-	if (err.response.status === 404) {
-		return { data: null };
-	}
-	throw err;
-};
-
-const encodedUrl = encodeURIComponent(Astro.request.url);
-console.log(encodedUrl);
-
-const { data: pageData } = await fetch(
-	`https://cdn.builder.io/api/v1/html/page?apiKey=${builderAPIpublicKey}&url=${encodedUrl}`
-)
-	.then((res) => res.json())
-	.catch(handleError);
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-	{pageData && pageData.html}
-</BaseLayout>
+<BaseLayout pageTitle={pageTitle}>index index</BaseLayout>
