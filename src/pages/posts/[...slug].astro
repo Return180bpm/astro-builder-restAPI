@@ -7,13 +7,18 @@ const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
 
 export async function getStaticPaths() {
     // We need to repeat this here, as `getStaticPaths` doesn't have access to variables in its parent's scope.
-    // See relevant docs here: https://docs.astro.build/en/reference/api-reference/#getstaticpaths
+    // Relevant docs: https://docs.astro.build/en/reference/api-reference/#getstaticpaths
     const builderAPIpublicKey = import.meta.env.BUILDER_API_PUBLIC_KEY;
     const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
     // const baseURL = "https://astro-builder-restapi.netlify.app/";
 
     const { results: posts } = await fetch(
-        `https://cdn.builder.io/api/v2/content/${builderModel}?apiKey=${builderAPIpublicKey}&fields=id,name,data.slug,data.title`
+        `https://cdn.builder.io/api/v2/content/${builderModel}?${new URLSearchParams(
+            {
+                apiKey: builderAPIpublicKey,
+                fields: ["id", "name", "data.slug", "data.title"].join(","),
+            }
+        ).toString()}`
     )
         .then((res) => res.json())
         .catch(handleError);
@@ -39,11 +44,15 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 const { title, isPreview } = Astro.props;
 
-// for this use case the url doesn't seem to matter - the API returns the same HTML
+// Builder's API requires this field but for this use case the url doesn't seem to matter - the API returns the same HTML
 const encodedUrl = encodeURIComponent("moot");
 
 const { html: postHTML } = await fetch(
-    `https://cdn.builder.io/api/v1/qwik/${builderModel}?apiKey=${builderAPIpublicKey}&url=${encodedUrl}&query.data.slug=${slug}&limit=1`
+    `https://cdn.builder.io/api/v1/qwik/${builderModel}?${new URLSearchParams({
+        apiKey: builderAPIpublicKey,
+        url: encodedUrl,
+        "query.data.slug": slug,
+    }).toString()}`
 )
     .then((res) => res.json())
     .catch(handleError);
