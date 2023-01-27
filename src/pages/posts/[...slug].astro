@@ -38,15 +38,16 @@ export async function getStaticPaths() {
                 params: { slug },
                 props: { title, isPreview: false },
             },
-            {
-                params: { slug: `${slug}/builder-preview` },
-                props: { title, isPreview: true },
-            },
+            // attempt at a dynamic preview URL.
+            // {
+            //     params: { slug: `${slug}/builder-preview` },
+            //     props: { title, isPreview: true },
+            // },
         ]),
-        {
-            params: { slug: `_/builder-preview` },
-            props: { isPreview: true },
-        },
+        // {
+        //     params: { slug: `builder-preview` },
+        //     props: { isPreview: true },
+        // },
     ];
 }
 const { slug } = Astro.params;
@@ -63,8 +64,7 @@ const { html: postHTML } = await fetch(
 ---
 
 <BaseLayout pageTitle={title}>
-    {console.log(slug)}
-    {
+    <!-- {
         isPreview ? (
             <>
                 <builder-component
@@ -76,6 +76,6 @@ const { html: postHTML } = await fetch(
         ) : (
             <Fragment set:html={postHTML} />
         )
-    }
-    <!-- <Fragment set:html={postHTML} /> -->
+    } -->
+    <Fragment set:html={postHTML} />
 </BaseLayout>
