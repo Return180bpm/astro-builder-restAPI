@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const builderAPIpublicKey = "add3bfefbde24699aeb53c5a1ad64377";
+const builderAPIpublicKey = import.meta.env.BUILDER_API_PUBLIC_KEY;
 // const builderModelName = "blogpost"
 const handleError = (err) => {
     // The requested Builder content could not be found.
@@ -12,9 +12,12 @@ const handleError = (err) => {
 };
 
 export async function getStaticPaths() {
-    const builderAPIpublicKey = "add3bfefbde24699aeb53c5a1ad64377";
+    // We need to repeat this here, as `getStaticPaths` doesn't have access to variables in its parent's scope.
+    // See relevant docs here: https://docs.astro.build/en/reference/api-reference/#getstaticpaths
 
     const baseURL = "https://astro-builder-restapi.netlify.app/";
+    const builderAPIpublicKey = import.meta.env.BUILDER_API_PUBLIC_KEY;
+
     const handleError = (err) => {
         // The requested Builder content could not be found.
         if (err.response.status === 404) {
@@ -50,7 +53,7 @@ const { slug } = Astro.params;
 const { title, isPreview } = Astro.props;
 
 // for this use case the url doesn't seem to matter - the API returns the same HTML
-const encodedUrl = encodeURIComponent('moot');
+const encodedUrl = encodeURIComponent("moot");
 
 const { html: postHTML } = await fetch(
     `https://cdn.builder.io/api/v1/qwik/blogpost?apiKey=${builderAPIpublicKey}&url=${encodedUrl}&query.data.slug=${slug}&limit=1`
@@ -60,6 +63,7 @@ const { html: postHTML } = await fetch(
 ---
 
 <BaseLayout pageTitle={title}>
+    {console.log(slug)}
     {
         isPreview ? (
             <>
