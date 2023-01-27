@@ -1,8 +1,8 @@
 ---
 const builderAPIpublicKey = import.meta.env.BUILDER_API_PUBLIC_KEY;
-const modelName = "blogpost";
+const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
 ---
 
-<builder-component model={modelName} api-key={builderAPIpublicKey}
+<builder-component model={builderModel} api-key={builderAPIpublicKey}
 ></builder-component>
 <script async src="https://cdn.builder.io/js/webcomponents"></script>
