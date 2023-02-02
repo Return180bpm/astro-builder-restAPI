@@ -16,7 +16,7 @@ export async function getStaticPaths() {
         `https://cdn.builder.io/api/v2/content/${builderModel}?${new URLSearchParams(
             {
                 apiKey: builderAPIpublicKey,
-                fields: ["id", "name", "data.slug", "data.title"].join(","),
+                fields: ["data.slug", "data.title"].join(","),
                 cachebust: "true",
             }
         ).toString()}`
