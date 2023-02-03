@@ -1,29 +1,22 @@
 ---
 import BlogPost from "../components/BlogPost.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { handleError } from "../scripts/utils";
 
 const pageTitle = "My Astro Learning Blog";
 
 const builderAPIpublicKey = import.meta.env.BUILDER_API_PUBLIC_KEY;
 const builderModel = import.meta.env.BUILDER_BLOGPOST_MODEL;
 
-const handleError = (err) => {
-    // The requested Builder content could not be found.
-    if (err.response.status === 404) {
-        return { data: null };
-    }
-    throw err;
-};
-
 const { results: posts } = await fetch(
     `https://cdn.builder.io/api/v2/content/${builderModel}?${new URLSearchParams(
-            {
-                apiKey: builderAPIpublicKey,
-                fields: ["data.slug", "data.title"].join(","),
-                cachebust: "true",
-            }
-        ).toString()}`
-    )
+        {
+            apiKey: builderAPIpublicKey,
+            fields: ["data.slug", "data.title"].join(","),
+            cachebust: "true",
+        }
+    ).toString()}`
+)
     .then((res) => res.json())
     .catch(handleError);
 ---
